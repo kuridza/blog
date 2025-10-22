@@ -39,11 +39,3 @@ services:
             - app
         networks:
             - laravel_app_network
-
-    queue_worker:
-      build: . # Or use the same image as 'app' if built separately
-      command: php artisan queue:work --tries=3 --timeout=60 # Adjust options as needed
-      volumes:
-        - .:/var/www/html
-      depends_on:
-        - app
