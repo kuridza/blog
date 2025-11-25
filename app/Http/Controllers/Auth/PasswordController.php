@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +16,20 @@ class PasswordController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
+        if ($request->has('user_id')) {
+
+            $validated = $request->validateWithBag('updatePassword', [
+                'password' => ['required', Password::defaults(), 'confirmed'],
+            ]);
+
+            $user = User::find($request->input('user_id'));
+            $user->update([
+                'password' => Hash::make($validated['password']),
+            ]);
+
+            return back()->with('status', 'password-updated');
+        }
+
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
             'password' => ['required', Password::defaults(), 'confirmed'],

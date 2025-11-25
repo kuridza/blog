@@ -17,6 +17,10 @@
         @csrf
         @method('patch')
 
+        @if(app('request')->input('user_id'))
+            <input type="hidden" name="user_id" value="{{ app('request')->input('user_id') }}">
+        @endif
+
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
@@ -46,6 +50,18 @@
                 </div>
             @endif
         </div>
+
+        @if(Auth::user()->role === 'ADMIN')
+            <div>
+                <x-input-label for="role" :value="__('Role')" />
+                <select name="role" id="role" class="w-full text-white dark:bg-gray-900 rounded-lg dark:border-gray-700" required>
+                    <option {{ ( $user->role === 'ADMIN') ? 'selected' : '' }}>ADMIN</option>
+                    <option {{ ( $user->role === 'CUSTOMER') ? 'selected' : '' }}>CUSTOMER</option>
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('role')" />
+            </div>
+
+        @endif
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>

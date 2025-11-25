@@ -18,6 +18,7 @@ services:
         # Mount the local Laravel directory into the container
         volumes:
             - .:/var/www/html
+            - vendor_sync:/var/www/html/vendor
         networks:
             - laravel_app_network
       # Override the PHP-FPM settings using local configuration if needed
@@ -39,3 +40,5 @@ services:
             - app
         networks:
             - laravel_app_network
+volumes:
+  vendor_sync:

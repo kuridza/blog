@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Comment;
-use App\Models\Post;
+use App\Models\Ad;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,37 +28,61 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $moderator = User::updateOrCreate(
-            ['email' => 'moderator@example.com'],
-            [
-                'name' => 'Moderator',
-                'role' => 'MOD',
-                'password' => Hash::make('mod'),
-                'email_verified_at' => now(),
-            ]
-        );
-
         $user = User::updateOrCreate(
             ['email' => 'user@example.com'],
             [
                 'name' => 'John Doe',
-                'role' => 'USER',
+                'role' => 'CUSTOMER',
                 'password' => Hash::make('user'),
                 'email_verified_at' => now(),
             ]
         );
 
-        $users = User::factory(10)->create();
+        $users = User::factory(11)->create();
+        $users = collect([$admin, $user])->merge($users);
 
-        $allUsers = collect([$admin, $moderator, $user])->merge($users);
+        Category::updateOrCreate([
+            'id' => 1,
+            'name' => 'Racunari',
+            'parent_id' => null,
+        ]);
 
-        Post::factory(100)->create()->each(function (Post $post) use ($allUsers) {
-            $post->user()->associate($allUsers->random())->save();
+        Category::updateOrCreate([
+            'id' => 2,
+            'name' => 'Komponente',
+            'parent_id' => 1,
+        ]);
 
-            Comment::factory(mt_rand(0, 33))->create([
-                'post_id' => $post->id,
-                'user_id' => $allUsers->random()->id,
+        Category::updateOrCreate([
+            'id' => 3,
+            'name' => 'CPU',
+            'parent_id' => 2,
+        ]);
+
+        Category::updateOrCreate([
+            'id' => 4,
+            'name' => 'GPU',
+            'parent_id' => 2,
+        ]);
+
+        Category::updateOrCreate([
+            'id' => 5,
+            'name' => 'Laptopovi',
+            'parent_id' => 1,
+        ]);
+
+        Category::factory()
+            ->count(5)
+            ->create();
+
+        $users->each(function ($user) {
+            $random = mt_rand(3,5);
+            Ad::factory()->count(mt_rand(0,5))->create([
+                'user_id' => $user->id,
+                'category_id' => $random,
+                'image' => $random . mt_rand(1,2) . '.png',
             ]);
         });
+
     }
 }

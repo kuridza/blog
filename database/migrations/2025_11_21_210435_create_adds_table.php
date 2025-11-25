@@ -8,24 +8,25 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('ads', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->text('content');
-            $table->longText('tags')->nullable();
-            $table->unsignedInteger('risk_score')->nullable();
-            $table->string('risk_level')->nullable();
-            $table->timestamp('archived_at')->nullable();
+            $table->integer('price');
+            $table->boolean('is_new');
+            $table->string('image');
+            $table->string('contact_phone');
+            $table->string('location');
             $table->timestamps();
 
             $table->index(['user_id', 'created_at']);
-            $table->index(['risk_level', 'risk_score']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('ads');
     }
 };

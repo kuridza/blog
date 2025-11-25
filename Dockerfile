@@ -23,7 +23,6 @@ RUN apk add --no-cache nodejs npm
 
 RUN apk add icu-dev
 
-
 # Install PHP extensions required by Laravel and common tools
 # RUN docker-php-ext-install opcache
 # RUN docker-php-ext-configure gd --with-jpeg --with-webp
