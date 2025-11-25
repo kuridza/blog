@@ -4,35 +4,35 @@
     <div class="flex text-white py-12 p-5 max-w-7xl mx-auto">
         @include('ads.sidebar', ['categories' => $categories, 'activeCategory' => request()->get('category_id')])
 
-        <main class="flex-1 p-8">
+        <main class="">
             @if(! isset($type))
                 <form method="GET" action="{{ route('ads.index') }}">
                     <div class="flex items-start mb-2">
-                        <x-text-input name="search" placeholder="{{ __('Pretraga') }}" class="mr-6"
+                        <x-text-input name="search" placeholder="{{ __('Pretraga') }}" class="mr-2 w-48"
                                       :value="request()->get('search')"/>
                         <select name="category_id" id="category_id"
-                                class="dark:bg-gray-900 rounded-lg dark:border-gray-700 mr-6">
-                            <option value="">{{ __('-- Izaberi kategoriju --') }}</option>
+                                class="dark:bg-gray-900 rounded-lg dark:border-gray-700 mr-2 w-48">
+                            <option value="">-- {{ __('Kategorija') }} --</option>
                             @foreach($categories as $category)
                                 @include('categories.options', ['category' => $category, 'level' => 0, 'selectedCategoryId' => request()->get('category_id') ])
                             @endforeach
                         </select>
                         @inject('locations', \App\Services\Locations::class)
-                        <select name="location" id="location" class="dark:bg-gray-900 rounded-lg dark:border-gray-700">
-                            <option value="">{{ __('-- Izaberi grad --') }}</option>
+                        <select name="location" id="location" class="dark:bg-gray-900 rounded-lg dark:border-gray-700 w-48">
+                            <option value="">-- {{ __('Grad') }} --</option>
                             @foreach($locations->getLocations() as $city)
                                 <option {{ ( request()->get('location') === $city) ? 'selected' : '' }}>{{ $city  }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="flex items-start">
-                        <x-text-input type="number" name="price_from" class="mr-6 sm:max-w-lg"
+                        <x-text-input type="number" name="price_from" class="mr-2 w-48"
                                       placeholder="{{ __('Cena od') }}" :value="request()->get('price_from')"/>
-                        <x-text-input type="number" name="price_to" class="mr-6" placeholder="{{ __('Cena do') }}"
+                        <x-text-input type="number" name="price_to" class="mr-2 w-48" placeholder="{{ __('Cena do') }}"
                                       :value="request()->get('price_to')"/>
 
 
-                        <select name="sort" id="sort" class="dark:bg-gray-900 rounded-lg dark:border-gray-700">
+                        <select name="sort" id="sort" class="dark:bg-gray-900 rounded-lg dark:border-gray-700 w-48">
                             <option value="">{{ __('Novije') }}</option>
                             <option
                                 {{ ( request()->get('sort') === 'asc') ? 'selected' : '' }} value="asc">{{ __('Jeftinije') }}</option>
@@ -40,7 +40,7 @@
                                 {{ ( request()->get('sort') === 'desc') ? 'selected' : '' }} value="desc">{{ __('Skuplje') }}</option>
                         </select>
 
-                        <x-primary-button type="submit" class="ml-12 mt-1 ml-12">{{ __('Pretraga') }}</x-primary-button>
+                        <x-primary-button type="submit" class="ml-4 mt-1">{{ __('Trazi') }}</x-primary-button>
                     </div>
                 </form>
             @else
@@ -51,7 +51,7 @@
                     <a href="{{ route('ads.show', $ad) }}" class="">
                         <div class="flex">
                             @if($ad->image)
-                                <img src="/images/{{ $ad->image }}" width="120">
+                                <img src="/images/{{ $ad->image }}" class="w-48">
                             @endif
                             <p class="flex-1 ml-4 mr-6">
                                 {{ $ad->title }}<br><br>
@@ -61,7 +61,7 @@
                                 <span class="text-red-600">{{ $ad->price }} RSD</span><br><br>
                                 <span>{{ $ad->location }}</span>
                             </p>
-                            <p class="flex-1 text-gray-400">{{ __('Postavio/la') }} {{ $ad->user->name }}, {{ $ad->created_at->format('d/m/Y') }}</p>
+                            <p class="flex-1 text-gray-400">{{ __('Postavio/la') }} {{ $ad->user->name }} <br> {{ $ad->created_at->format('d/m/Y') }}</p>
                         </div>
                     </a>
                 </div>
